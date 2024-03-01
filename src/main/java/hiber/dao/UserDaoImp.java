@@ -41,20 +41,20 @@ public class UserDaoImp implements UserDao {
     @Override
     @SuppressWarnings("unchecked")
     public User findOwner(String carModel, String carSeries) {
-        TypedQuery<Car> findCarQuery = sessionFactory.getCurrentSession().createQuery("from Car where model = :car_name and series = :car_series")
+        TypedQuery<Car> queryCars = sessionFactory.getCurrentSession().createQuery("from Car where model = :car_name and series = :car_series")
                 .setParameter("car_name", carModel)
                 .setParameter("car_series", carSeries);
-        List<Car> findCarList = findCarQuery.getResultList();
-        User FindUser = new User();
-        if (!findCarList.isEmpty()) {
-            Car findCar = findCarList.get(0);
-            List<User> ListUser = listUsers();
-            FindUser = ListUser.stream()
+        List<Car> listCars = queryCars.getResultList();
+        User findUser = new User();
+        if (!listCars.isEmpty()) {
+            Car findCar = listCars.get(0);
+            List<User> userList = listUsers();
+            findUser = userList.stream()
                     .filter(user -> user.getCar().equals(findCar))
                     .findAny()
                     .orElse(null);
-            return FindUser;
+            return findUser;
         }
-        return FindUser;
+        return findUser;
     }
 }
